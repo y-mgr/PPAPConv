@@ -46,6 +46,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
             <MenuItem Header="_File">
@@ -128,6 +129,14 @@
                 </Button>
             </Grid>
         </GroupBox>
+        <Grid Grid.Row="3" Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="100"/>
+                <ColumnDefinition Width="180"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" x:Name="NameColumn" BorderThickness="0"/>
+            <Border Grid.Column="1" x:Name="DateTimeColumn" BorderThickness="0"/>
+        </Grid>
         <ListView x:Name="EntryView" Grid.Row="3" ItemsSource="{Binding EntryList,Mode=OneWay}" HorizontalAlignment="Stretch">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
@@ -136,10 +145,17 @@
             </ListView.ItemContainerStyle>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Entries" Width="{Binding ElementName=EntryView,Path=ActualWidth}">
+                    <GridViewColumn Header="Name" Width="{Binding ElementName=NameColumn,Path=ActualWidth}">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate DataType="{x:Type zip:ZipEntry}">
                                 <TextBlock Text="{Binding Name}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Timestamp" Width="{Binding ElementName=DateTimeColumn,Path=ActualWidth}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type zip:ZipEntry}">
+                                <TextBlock Text="{Binding DateTime, StringFormat=yyyy/MM/dd HH:mm:ss}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

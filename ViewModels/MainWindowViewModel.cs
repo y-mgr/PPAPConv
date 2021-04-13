@@ -18,21 +18,6 @@ namespace PPAPConv.ViewModels
         Preserve
     }
 
-    internal class MemorySource : IStaticDataSource
-    {
-        private byte[] Data;
-
-        public MemorySource(byte[] data)
-        {
-            Data = data;
-        }
-
-        public Stream GetSource()
-        {
-            return new MemoryStream(Data);
-        }
-    }
-
     class MainWindowViewModel : IDropTarget, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
