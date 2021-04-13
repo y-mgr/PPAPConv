@@ -1,0 +1,101 @@
+﻿<Window x:Class="PPAPConv.Views.MainWindow"
+
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:PPAPConv.ViewModels"
+        xmlns:zip="clr-namespace:ICSharpCode.SharpZipLib.Zip;assembly=ICSharpCode.SharpZipLib"
+        xmlns:dd="urn:gong-wpf-dragdrop"
+        dd:DragDrop.IsDropTarget="True"
+        dd:DragDrop.DropHandler="{Binding}"
+        mc:Ignorable="d"
+        Title="PPAP Converter" Height="450" Width="600">
+    <Window.DataContext>
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="GroupBox">
+                <Setter Property="Margin" Value="3"/>
+            </Style>
+            <Style TargetType="ComboBox">
+                <Setter Property="Margin" Value="3"/>
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="Margin" Value="3"/>
+                <Setter Property="Width" Value="80"/>
+                <Setter Property="Height" Value="28"/>
+            </Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="Margin" Value="3"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+            <Style TargetType="TextBox">
+                <Setter Property="Margin" Value="3"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+            </Style>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Header="SOURCE ZIP">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Text="{Binding SourceName,Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Stretch"/>
+                <Button  Grid.Column="1" Content="SELECT" Command="{Binding SelectCommand}" Width="90"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Header="CONVERT">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Row="1" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="PASSWORD" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    <TextBox Grid.Column="1" Text="{Binding KeyString,Mode=OneWayToSource,UpdateSourceTrigger=PropertyChanged,ValidatesOnExceptions=True}" HorizontalAlignment="Stretch"/>
+                </Grid>
+
+                <Grid Grid.Row="1" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="BACKUP POLICY" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1" ItemsSource="{Binding Policies,Mode=OneTime}" SelectedIndex="{Binding PolicyIndex,Mode=TwoWay}"/>
+                </Grid>
+                <Button Grid.Row="1" Grid.Column="4" Content="TRY!" Command="{Binding ConvertCommand}" Width="90"/>
+            </Grid>
+        </GroupBox>
+        <ListView x:Name="EntryView" Grid.Row="2" ItemsSource="{Binding EntryList,Mode=OneWay}" HorizontalAlignment="Stretch">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Entries" Width="{Binding ElementName=EntryView,Path=ActualWidth}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate DataType="{x:Type zip:ZipEntry}">
+                                <TextBlock Text="{Binding Name}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>

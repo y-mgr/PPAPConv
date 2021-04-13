@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31129.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPAPConv", "PPAPConv.csproj", "{547F15B6-8A12-4F6A-BA96-C3B9BF4396E8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{547F15B6-8A12-4F6A-BA96-C3B9BF4396E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{547F15B6-8A12-4F6A-BA96-C3B9BF4396E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{547F15B6-8A12-4F6A-BA96-C3B9BF4396E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{547F15B6-8A12-4F6A-BA96-C3B9BF4396E8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8D2E943F-8F8F-4EC3-A9DE-8EAB7C883689}
+	EndGlobalSection
+EndGlobal
