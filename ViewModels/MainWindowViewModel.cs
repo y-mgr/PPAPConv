@@ -89,8 +89,21 @@ namespace PPAPConv.ViewModels
 
         public ICommand SelectCommand { get; }
         public ICommand ConvertCommand { get; }
+        public ICommand ExitCommand { get; }
 
-        private bool? IsEncrypted;
+        private bool? isEncrypted;
+        public bool? IsEncrypted
+        {
+            get => isEncrypted;
+            set
+            {
+                if (isEncrypted != value)
+                {
+                    isEncrypted = value;
+                    NotifyPropertyChanged(nameof(IsEncrypted));
+                }
+            }
+        }
 
         private class ActionCommand : ICommand
         {
@@ -114,6 +127,7 @@ namespace PPAPConv.ViewModels
         {
             SelectCommand = new ActionCommand(SelectZipAction);
             ConvertCommand = new ActionCommand(DoConvertAsync);
+            ExitCommand = new ActionCommand((_)=>{ Application.Current.MainWindow.Close(); });
             PropertyChanged += OnProyertyChanged;
         }
 
@@ -226,9 +240,9 @@ namespace PPAPConv.ViewModels
                     var outZipPath = GetSuffixedPath(SourceName, suffix.ToString());
                     try
                     {
-                        using (var zofs = ZipFile.Create(outZipPath))
+                        using (var zofs = new ZipOutputStream(new FileStream(outZipPath, FileMode.CreateNew, FileAccess.Write)))
                         {
-                            zofs.BeginUpdate();
+                            zofs.SetLevel(9);
                             if (IsEncrypted == true)
                             {
                                 zipFile.Password = KeyString;
@@ -241,6 +255,7 @@ namespace PPAPConv.ViewModels
                             foreach (ZipEntry ize in zipFile)
                             {
                                 var oze = GetOutputZipEntry(ize);
+                                zofs.PutNextEntry(oze);
                                 if (ize.IsFile)
                                 {
                                     var buffer = new byte[ize.Size];
@@ -252,15 +267,13 @@ namespace PPAPConv.ViewModels
                                         remained -= length;
                                         offset += length;
                                     }
-                                    zofs.Add(new MemorySource(buffer), oze);
+                                    await zofs.WriteAsync(buffer, 0, buffer.Length);
                                 }
-                                else if (ize.IsDirectory)
-                                {
-                                    zofs.AddDirectory(oze.Name);
-                                }
+                                zofs.CloseEntry();
+                                await zofs.FlushAsync();
                             }
                             zipFile.Close();
-                            zofs.CommitUpdate();
+                            zofs.Finish();
                             zofs.Close();
                             if (Policies[PolicyIndex] == BackupPolicy.Rename)
                             {
@@ -304,14 +317,16 @@ namespace PPAPConv.ViewModels
         {
             ZipEntry oze = new ZipEntry(ize.Name)
             {
-                Comment = ize.Comment,
                 DateTime = ize.DateTime,
-                CompressionMethod = ize.CompressionMethod,
-                ExtraData = ize.ExtraData,
-                HostSystem = ize.HostSystem,
-                IsUnicodeText = ize.IsUnicodeText,
-                Flags = ize.Flags
             };
+            if (!string.IsNullOrEmpty(ize.Comment))
+            {
+                oze.Comment = ize.Comment;
+            }
+            if (ize.ExtraData != null)
+            {
+                oze.ExtraData = ize.ExtraData;
+            }
             // invert encryption
             if (IsEncrypted == true)
             {

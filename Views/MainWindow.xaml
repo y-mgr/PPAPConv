@@ -14,6 +14,11 @@
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
+    <Window.InputBindings>
+        <KeyBinding Gesture="Ctrl+O" Command="{Binding SelectCommand}"/>
+        <KeyBinding Gesture="Ctrl+G" Command="{Binding ConvertCommand}"/>
+        <KeyBinding Gesture="Ctrl+Q" Command="{Binding ExitCommand}"/>
+    </Window.InputBindings>
     <Grid>
         <Grid.Resources>
             <Style TargetType="GroupBox">
@@ -39,9 +44,36 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Header="SOURCE ZIP">
+        <Menu Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Open" Command="{Binding SelectCommand}" InputGestureText="Ctrl+O"/>
+                <MenuItem Header="E_xit" Command="{Binding ExitCommand}" InputGestureText="Ctrl+Q"/>
+            </MenuItem>
+            <MenuItem Header="_Convert">
+                <MenuItem Command="{Binding ConvertCommand}" InputGestureText="Ctrl+G">
+                    <MenuItem.Style>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Header" Value="Undetermined"/>
+                            <Setter Property="IsEnabled" Value="False"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsEncrypted,Mode=OneWay}" Value="True">
+                                    <Setter Property="Header" Value="_Decrypt"/>
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsEncrypted,Mode=OneWay}" Value="False">
+                                    <Setter Property="Header" Value="_Encrypt"/>
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </MenuItem.Style>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <GroupBox Grid.Row="1" Header="SOURCE ZIP">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="4*"/>
@@ -51,7 +83,7 @@
                 <Button  Grid.Column="1" Content="SELECT" Command="{Binding SelectCommand}" Width="90"/>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="1" Header="CONVERT">
+        <GroupBox Grid.Row="2" Header="CONVERT">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*"/>
@@ -76,10 +108,27 @@
                     <TextBlock Grid.Column="0" Text="BACKUP POLICY" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                     <ComboBox Grid.Column="1" ItemsSource="{Binding Policies,Mode=OneTime}" SelectedIndex="{Binding PolicyIndex,Mode=TwoWay}"/>
                 </Grid>
-                <Button Grid.Row="1" Grid.Column="4" Content="TRY!" Command="{Binding ConvertCommand}" Width="90"/>
+                <Button Grid.Row="1" Grid.Column="4" Command="{Binding ConvertCommand}" Width="90">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Content" Value="Undetermined"/>
+                            <Setter Property="IsEnabled" Value="False"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsEncrypted,Mode=OneWay}" Value="True">
+                                    <Setter Property="Content" Value="Decrypt"/>
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsEncrypted,Mode=OneWay}" Value="False">
+                                    <Setter Property="Content" Value="Encrypt"/>
+                                    <Setter Property="IsEnabled" Value="True"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </Grid>
         </GroupBox>
-        <ListView x:Name="EntryView" Grid.Row="2" ItemsSource="{Binding EntryList,Mode=OneWay}" HorizontalAlignment="Stretch">
+        <ListView x:Name="EntryView" Grid.Row="3" ItemsSource="{Binding EntryList,Mode=OneWay}" HorizontalAlignment="Stretch">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
