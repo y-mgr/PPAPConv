@@ -283,7 +283,11 @@ namespace PPAPConv.ViewModels
                                 outZipPath = SourceName;
                             }
                         }
-                        MessageBox.Show(string.Format("Converted file is {0}", outZipPath), "Completed", MessageBoxButton.OK, MessageBoxImage.None);
+                        var openIt = MessageBox.Show(string.Format("Converted file is \"{0}\"\nDo you want open in Explorer?", outZipPath), "Completed", MessageBoxButton.OKCancel, MessageBoxImage.None);
+                        if (openIt == MessageBoxResult.OK)
+                        {
+                            System.Diagnostics.Process.Start("explorer.exe", string.Format("/select,\"{0}\"", outZipPath));
+                        }
                     }
                     catch (Exception ex)
                     {
