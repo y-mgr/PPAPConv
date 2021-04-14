@@ -98,7 +98,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="PASSWORD" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                    <TextBox Grid.Column="1" Text="{Binding KeyString,Mode=OneWayToSource,UpdateSourceTrigger=PropertyChanged,ValidatesOnExceptions=True}" HorizontalAlignment="Stretch"/>
+                    <TextBox Grid.Column="1" Text="{Binding KeyString,Mode=OneWayToSource,UpdateSourceTrigger=PropertyChanged,ValidatesOnExceptions=True}" MaxLength="12" FontSize="18" HorizontalAlignment="Stretch"/>
                 </Grid>
 
                 <Grid Grid.Row="1" Grid.Column="1">
