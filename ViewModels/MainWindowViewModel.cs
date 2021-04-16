@@ -262,10 +262,11 @@ namespace PPAPConv.ViewModels
                             zofs.Close();
                             if (Policies[PolicyIndex] == BackupPolicy.Rename)
                             {
-                                var backupPath = GetSuffixedPath(SourceName, ".backuup");
+                                var backupPath = GetSuffixedPath(SourceName, ".backup");
                                 File.Move(SourceName, backupPath);
                                 File.Move(outZipPath, SourceName);
                                 outZipPath = SourceName;
+                                UpdateEntryList(SourceName);
                             }
                         }
                         var openIt = MessageBox.Show(string.Format("Converted file is \"{0}\"\nDo you want open in Explorer?", outZipPath), "Completed", MessageBoxButton.OKCancel, MessageBoxImage.None);
