@@ -1,0 +1,12 @@
+before_script:
+  - C:\\Windows\\System32\\chcp 65001
+
+stages:
+  - build
+
+msbuild:
+  stage: build
+  tags:
+    - windows
+  script:
+    - msbuild PPAPConv.sln -t:build -restore
